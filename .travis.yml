@@ -32,4 +32,4 @@ script: travis_retry mvn integration-test -Pits
 addons:
    apt:
       packages:
-         - java # for an updated version of Java 8
+         - oracle-java8-installer # for an updated version of Java 8
