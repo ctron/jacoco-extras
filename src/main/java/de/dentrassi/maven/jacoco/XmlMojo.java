@@ -31,6 +31,13 @@ import org.apache.maven.project.MavenProject;
 import org.jacoco.report.IReportGroupVisitor;
 import org.jacoco.report.IReportVisitor;
 
+/**
+ * Convert binary execution data to XML report including dependencies <br>
+ * This mojo will convert the binary jacoco execution data into the same format
+ * as the XML report. But it will take all module dependencies into
+ * consideration. This may be helpful when tools actually require XML data, but
+ * tests in a module are responsible for testing classes in other modules.
+ */
 @Mojo(defaultPhase = VERIFY, name = "xml", requiresProject = true, inheritByDefault = true)
 public class XmlMojo extends AbstractMojo {
 
