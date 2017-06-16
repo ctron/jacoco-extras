@@ -6,7 +6,7 @@
 		<menu name="Overview" inherit="top">
 			<item name="Introduction" href="index.html" />
 			<item name="Goals" href="plugin-info.html" />
-			<item name="Example" href="example.html" />
+			<item name="Usage" href="usage.html" />
 		</menu>
 
 		<menu ref="reports" />
