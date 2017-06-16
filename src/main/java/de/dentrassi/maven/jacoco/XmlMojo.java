@@ -14,9 +14,11 @@ import static org.apache.maven.plugins.annotations.LifecyclePhase.VERIFY;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
@@ -109,10 +111,9 @@ public class XmlMojo extends AbstractMojo {
     }
 
     private List<MavenProject> findDependencies(final String... scopes) {
-        final List<MavenProject> result = new ArrayList<>();
-        final List<String> scopeList = Arrays.asList(scopes);
-        for (final Object dependencyObject : this.project.getDependencies()) {
-            final Dependency dependency = (Dependency) dependencyObject;
+        final List<MavenProject> result = new LinkedList<>();
+        final Set<String> scopeList = new HashSet<>(Arrays.asList(scopes));
+        for (final Dependency dependency : this.project.getDependencies()) {
             if (scopeList.contains(dependency.getScope())) {
                 final MavenProject project = findProjectFromReactor(dependency);
                 if (project != null) {
