@@ -15,6 +15,23 @@ module automatically.
 
 ## Usage
 
+Simply add the follow to your Maven project:
+
+```xml
+<plugin>
+  <groupId>de.dentrassi.maven</groupId>
+  <artifactId>jacoco-extras</artifactId>
+  <version><!-- current version --></version>
+  <executions>
+    <execution>
+      <goals>
+        <goal>xml</goal>
+      </goals>
+    </execution>
+  </executions>
+</plugin>
+```
+
 For more information about how to use this plugin see
 [the documentation](https://ctron.github.io/jacoco-extras).
 
