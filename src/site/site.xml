@@ -19,8 +19,6 @@
 
 	<custom>
 		<fluidoSkin>
-			<facebookLike />
-			<googlePlusOne />
 			<twitter>
 				<user>ctron</user>
 				<showUser>true</showUser>
