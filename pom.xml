@@ -42,7 +42,7 @@
 
 		<maven.version>3.2.5</maven.version>
 
-		<jacoco.version>0.7.9</jacoco.version>
+		<jacoco.version>0.8.2</jacoco.version>
 	</properties>
 
 	<prerequisites>
@@ -126,7 +126,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.7.0</version>
+					<version>3.8.0</version>
 					<configuration>
 						<source>1.7</source>
 						<target>1.7</target>
@@ -142,7 +142,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>2.10.4</version>
+					<version>3.0.1</version>
 				</plugin>
 
 				<plugin>
@@ -372,6 +372,7 @@
 							<debug>true</debug>
 							<cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
 							<localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
+							<postBuildHookScript>verify</postBuildHookScript>
 							<pomIncludes>
 								<pomInclude>*/pom.xml</pomInclude>
 							</pomIncludes>
@@ -423,7 +424,26 @@
 
 		</profile>
 
-	</profiles>
+		<profile>
+			<id>jdk-10</id>
+			<activation>
+				<jdk>[1.10,2)</jdk>
+			</activation>
+			<build>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-javadoc-plugin</artifactId>
+							<configuration>
+								<additionalOptions>-html5</additionalOptions>
+							</configuration>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+		</profile>
 
+	</profiles>
 
 </project>
