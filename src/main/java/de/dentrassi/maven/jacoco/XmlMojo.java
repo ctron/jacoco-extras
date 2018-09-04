@@ -215,10 +215,10 @@ public class XmlMojo extends AbstractMojo {
 		final Set<String> scopeList = new HashSet<>(Arrays.asList(scopes));
 		for (final Dependency dependency : this.project.getDependencies()) {
 			if (scopeList.contains(dependency.getScope())) {
-				getLog().info("Adding dependency - " + dependency.toString());
+				getLog().debug("Adding dependency - " + dependency.toString());
 				final MavenProject project = findProjectFromReactor(dependency);
 				if (project != null) {
-					getLog().info("  -> Unable to find in reactor");
+					getLog().debug("  -> Unable to find in reactor");
 					result.add(project);
 				}
 			}
