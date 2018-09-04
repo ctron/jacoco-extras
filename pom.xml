@@ -5,7 +5,7 @@
 
 	<groupId>de.dentrassi.maven</groupId>
 	<artifactId>jacoco-extras</artifactId>
-	<version>0.1.3</version>
+	<version>0.1.4-SNAPSHOT</version>
 
 	<packaging>maven-plugin</packaging>
 
@@ -28,7 +28,7 @@
 		<url>https://github.com/ctron/jacoco-extras</url>
 		<connection>scm:git:git://github.com/ctron/jacoco-extras.git</connection>
 		<developerConnection>scm:git:git@github.com:ctron/jacoco-extras.git</developerConnection>
-	  <tag>jacoco-extras-0.1.3</tag>
+	  <tag>HEAD</tag>
   </scm>
 
 	<issueManagement>
