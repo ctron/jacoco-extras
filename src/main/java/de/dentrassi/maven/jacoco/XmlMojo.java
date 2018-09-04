@@ -60,17 +60,20 @@ import org.w3c.dom.Document;
 @Mojo(defaultPhase = VERIFY, name = "xml", requiresProject = true, inheritByDefault = true, requiresDependencyResolution = ResolutionScope.TEST)
 public class XmlMojo extends AbstractMojo {
 
+	private final static String PROP_PREFIX = "jacoco.extras.";
+
 	/**
 	 * Allows to skip the execution
 	 */
-	@Parameter(property = "jacoco.extras.skip", defaultValue = "false")
+	@Parameter(property = PROP_PREFIX + "skip", defaultValue = "false")
 	private boolean skip;
 
 	/**
 	 * The jacoco execution data <br>
 	 * If this file doesn't exist, execution of this plugin will be skipped
 	 */
-	@Parameter(property = "jacoco.extras.execFile", defaultValue = "${project.build.directory}/jacoco.exec", required = true)
+	@Parameter(property = PROP_PREFIX
+			+ "execFile", defaultValue = "${project.build.directory}/jacoco.exec", required = true)
 	private File execFile;
 
 	/**
@@ -117,10 +120,24 @@ public class XmlMojo extends AbstractMojo {
 	 * @since 0.1.2
 	 */
 	@Parameter(property = "jacoco.extras.deleteRaw", defaultValue = "true")
-	private final boolean deleteRaw = true;
+	private boolean deleteRaw = true;
+
+	/**
+	 * Scopes to consider for dependencies.
+	 */
+	@Parameter(property = "jacoco.extras.scopes", defaultValue = "compile,runtime,provided,test")
+	private String[] scopes = new String[] { SCOPE_COMPILE, SCOPE_RUNTIME, SCOPE_PROVIDED, SCOPE_TEST };
+
+	public void setScopes(String[] scopes) {
+		this.scopes = scopes;
+	}
 
 	public void setPretty(final boolean pretty) {
 		this.pretty = pretty;
+	}
+
+	public void setDeleteRaw(boolean deleteRaw) {
+		this.deleteRaw = deleteRaw;
 	}
 
 	@Override
@@ -146,8 +163,7 @@ public class XmlMojo extends AbstractMojo {
 
 			processProject(report, group, this.project);
 
-			for (final MavenProject dependency : findDependencies(SCOPE_COMPILE, SCOPE_RUNTIME, SCOPE_PROVIDED,
-					SCOPE_TEST)) {
+			for (final MavenProject dependency : findDependencies(this.scopes)) {
 				processProject(report, group, dependency);
 			}
 
