@@ -1,0 +1,1 @@
+typeSearchIndex = [{"p":"de.dentrassi.maven.jacoco","l":"FileFilter"},{"p":"de.dentrassi.maven.jacoco","l":"HelpMojo"},{"p":"de.dentrassi.maven.jacoco","l":"XmlMojo"}]
