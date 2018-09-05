@@ -79,7 +79,8 @@ public class XmlMojo extends AbstractMojo {
 	/**
 	 * The output XML file
 	 */
-	@Parameter(property = "jacoco.extras.xmlFile", defaultValue = "${project.build.directory}/jacoco.xml", required = true)
+	@Parameter(property = PROP_PREFIX
+			+ "xmlFile", defaultValue = "${project.build.directory}/jacoco.xml", required = true)
 	private File xmlFile;
 
 	/**
@@ -111,7 +112,7 @@ public class XmlMojo extends AbstractMojo {
 	 *
 	 * @since 0.1.2
 	 */
-	@Parameter(property = "jacoco.extras.pretty", defaultValue = "true")
+	@Parameter(property = PROP_PREFIX + "pretty", defaultValue = "true")
 	private boolean pretty = true;
 
 	/**
@@ -119,14 +120,24 @@ public class XmlMojo extends AbstractMojo {
 	 *
 	 * @since 0.1.2
 	 */
-	@Parameter(property = "jacoco.extras.deleteRaw", defaultValue = "true")
+	@Parameter(property = PROP_PREFIX + "deleteRaw", defaultValue = "true")
 	private boolean deleteRaw = true;
 
 	/**
 	 * Scopes to consider for dependencies.
 	 */
-	@Parameter(property = "jacoco.extras.scopes", defaultValue = "compile,runtime,provided,test")
+	@Parameter(property = PROP_PREFIX + "scopes", defaultValue = "compile,runtime,provided,test")
 	private String[] scopes = new String[] { SCOPE_COMPILE, SCOPE_RUNTIME, SCOPE_PROVIDED, SCOPE_TEST };
+
+	/**
+	 * Process transient dependencies.
+	 */
+	@Parameter(property = PROP_PREFIX + "transientDependencies", defaultValue = "true")
+	private boolean transientDependencies = true;
+
+	public void setTransientDependencies(boolean transientDependencies) {
+		this.transientDependencies = transientDependencies;
+	}
 
 	public void setScopes(String[] scopes) {
 		this.scopes = scopes;
@@ -227,19 +238,45 @@ public class XmlMojo extends AbstractMojo {
 	}
 
 	private List<MavenProject> findDependencies(final String... scopes) {
+
+		final Set<String> knownDependencies = new HashSet<>();
 		final List<MavenProject> result = new LinkedList<>();
-		final Set<String> scopeList = new HashSet<>(Arrays.asList(scopes));
-		for (final Dependency dependency : this.project.getDependencies()) {
-			if (scopeList.contains(dependency.getScope())) {
-				getLog().debug("Adding dependency - " + dependency.toString());
-				final MavenProject project = findProjectFromReactor(dependency);
-				if (project != null) {
-					getLog().debug("  -> Unable to find in reactor");
-					result.add(project);
+
+		findDependencies(new HashSet<>(Arrays.asList(scopes)), result, knownDependencies, project.getDependencies());
+
+		return result;
+
+	}
+
+	private void findDependencies(final Set<String> scopes, final List<MavenProject> result,
+			final Set<String> knownDependencies, List<Dependency> dependencies) {
+
+		for (final Dependency dependency : dependencies) {
+
+			if (!scopes.contains(dependency.getScope())) {
+				continue;
+			}
+
+			final String key = toKey(dependency);
+			if (!knownDependencies.add(key)) {
+				continue;
+			}
+
+			getLog().debug("Adding dependency - " + dependency.toString());
+			final MavenProject project = findProjectFromReactor(dependency);
+			if (project != null) {
+				result.add(project);
+				if (this.transientDependencies) {
+					findDependencies(scopes, result, knownDependencies, project.getDependencies());
 				}
+			} else {
+				getLog().debug("  -> Unable to find in reactor");
 			}
 		}
-		return result;
+	}
+
+	private static String toKey(final Dependency dependency) {
+		return dependency.getManagementKey() + dependency.getVersion();
 	}
 
 	private MavenProject findProjectFromReactor(final Dependency d) {
