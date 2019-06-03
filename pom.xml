@@ -42,7 +42,7 @@
 
 		<maven.version>3.2.5</maven.version>
 
-		<jacoco.version>0.8.2</jacoco.version>
+		<jacoco.version>0.8.4</jacoco.version>
 	</properties>
 
 	<prerequisites>
